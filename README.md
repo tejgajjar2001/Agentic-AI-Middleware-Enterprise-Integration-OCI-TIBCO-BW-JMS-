@@ -1,4 +1,4 @@
-Agentic AI Middleware — Enterprise Integration (OCI + TIBCO BW/JMS)
+**Agentic AI Middleware — Enterprise Integration (OCI + TIBCO BW/JMS)**
 
 Owner: Tejas Gajjar • © 2025 All rights reserved
 Stack: FastAPI · Agentic loop (Sense→Think→Plan→Act→Learn) · OpenTelemetry · Kafka/OCI Streaming · TIBCO BW/JMS · Idempotent Outbox · Policy Guardrails
@@ -39,11 +39,11 @@ Kafka-compatible OCI Streaming (SASL/SSL ready)
 route_jms tool for TIBCO BW/EMS integration (stub, replace with EMS publisher in prod)
 
 **Quick Start**
-1) Setup
+**1) Setup**
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-2) (Optional) Observability and Streaming
+**2) (Optional) Observability and Streaming**
 # OpenTelemetry (e.g., local OTEL Collector)
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 
@@ -55,14 +55,14 @@ export SECURITY_PROTOCOL=SASL_SSL
 export SASL_MECHANISM=PLAIN
 # Optional CA path: export SSL_CA_LOCATION=/etc/ssl/certs/ca-certificates.crt
 
-3) (Optional) Service Tokens
+**3) (Optional) Service Tokens**
 export CRM_TOKEN=dev-crm-token
 export WMS_TOKEN=dev-wms-token
 
-4) Run the API
+**4) Run the API**
 uvicorn agentic_middleware.app:app --reload --port 8080
 
-5) Test an Event
+**5) Test an Event**
 curl -X POST http://localhost:8080/ingest -H "content-type: application/json" -d '{
   "id": "evt-001",
   "source": "orders",
@@ -72,7 +72,7 @@ curl -X POST http://localhost:8080/ingest -H "content-type: application/json" -d
   "trace_id": "trace-001"
 }'
 
-6) Start a Kafka/OCI Consumer (optional)
+**6) Start a Kafka/OCI Consumer (optional)**
 curl -X POST "http://localhost:8080/consume/start?group_id=agentic-consumer&topic=orders.created"
 
 7) Human Approval (when required)
@@ -80,15 +80,15 @@ curl -X POST http://localhost:8080/approve -H "content-type: application/json" -
   "trace_id": "trace-001", "step_name": "open_ticket", "approved_by": "oncall"
 }'
 
-Configuration
+**Configuration**
 
-Project reads two configs:
+**Project reads two configs:**
 
-Policies: agentic_middleware/agent/policies.yaml (SLOs, RBAC, data policy, approvals)
+**Policies:** agentic_middleware/agent/policies.yaml (SLOs, RBAC, data policy, approvals)
 
-App Config: config.example.yaml (service base URLs, streaming, secrets)
+**App Config: **config.example.yaml (service base URLs, streaming, secrets)
 
-Example config.example.yaml:
+**Example config.example.yaml:**
 
 service:
   port: 8080
@@ -110,7 +110,7 @@ services:
   oms:
     topic: "oms.events"
 
-integrations:
+**integrations:**
   jms:
     default_destination: "QUEUE.ORDERS"   # TIBCO EMS/BW bridge target
   streaming:
@@ -121,7 +121,7 @@ secrets:
   static: {}  # e.g., { "CRM_TOKEN": "dev-token" }
 
 
-Key Policy Flags (policies.yaml):
+**Key Policy Flags (policies.yaml):**
 
 slo.max_latency_ms, slo.max_retries, slo.max_steps
 
