@@ -1,0 +1,33 @@
+slo:
+  max_latency_ms: 1500
+  max_retries: 2
+  total_cost_usd: 0.05
+  max_steps: 12
+
+rbac:
+  roles:
+    agent:
+      allow_tools: [publish_kafka, call_rest, transform_json, open_ticket, route_jms]
+      deny_domains: []
+
+data_policy:
+  pii_scrub: true
+  redact_fields: ["ssn","card_number","dob","email"]
+  residency:
+    EU: ["eu-*","de-*"]
+    US: ["us-*"]
+
+approval_gates:
+  - when: "tool == 'open_ticket' and payload.priority == 'P0'"
+    require: "oncall-approver"
+
+execution:
+  idempotency:
+    key_from: ["event.id","step.name"]
+  retry:
+    strategy: "exponential_backoff"
+    base_ms: 100
+    max_ms: 1000
+  circuit_breaker:
+    error_rate_threshold: 0.2
+    lookback_s: 60
